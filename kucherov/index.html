@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search demo site</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+        <form onSubmit="doSearch(document.getElementById('search').value); return false">
+                <h1>Elasticsearch client side demo</h1>
+
+                <div class="form-group">
+                        <div class="input-group mb-3">
+                          <input id="search" type="text" class="form-control" placeholder="Search..." aria-label="Search..." aria-describedby="basic-addon2">
+                          <div class="input-group-append">
+                                <button class="btn btn-primary" type="submit">Search</button>
+                          </div>
+                        </div>
+                </div>
+
+                <div id="total"></div>
+
+                <div>
+                <table class="table">
+                  <thead>
+                        <tr>
+                          <th scope="col">#</th>
+                          <th scope="col">Id</th>
+                          <th scope="col">Name</th>
+						  <th scope="col">Annotation</th>
+                          <th scope="col">Score</th>
+                        </tr>
+                  </thead>
+                  <tbody id="hits">
+                  </tbody>
+                </table>
+                </div>
+        </form>
+</div>
+
+<script type="application/javascript">
+  function doSearch (needle) {
+    var searchHost = 'http://35.187.111.78:9200/books-index/_search';
+        var body = {
+            'size': 10
+        };
+        if (needle.length !== 0) {
+            var query = {
+                'bool': {}
+            };
+            if (needle.length !== 0) {
+                query.bool.must = {
+                    'multi_match': {
+                        'query': needle,
+                        'fields': ['name', 'annotation']
+                    }
+                };
+            }
+            body.query = query;
+        }
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open('POST', searchHost, false);
+    xmlHttp.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+    xmlHttp.send(JSON.stringify(body));
+    var response = JSON.parse(xmlHttp.responseText);
+    // Print results on screen.
+    document.getElementById('total').innerHTML = '<h2>Showing ' + response.hits.hits.length + ' results</h2>';
+    var output = '';
+    for (var i = 0; i < response.hits.hits.length; i++) {
+      output += '<tr><th scope="row">' + i + '</th><td>' + response.hits.hits[i]._source.id + '</td><td>' + response.hits.hits[i]._source.name +'</td><td>'+ response.hits.hits[i]._source.annotation  + '</td><td>' + '</td><td>' + response.hits.hits[i]._score + '</td></tr>';
+    }
+    document.getElementById('hits').innerHTML = output;
+  }
+  //doSearch(document.getElementById('search').value);
+</script>
+</body>
+</html>
