@@ -13,3 +13,8 @@ sudo update-rc.d elasticsearch defaults 95 10
 sudo -i service elasticsearch start
 sudo -i service elasticsearch stop
 
+mkdir /var/lib/elasticsearch/tmp
+chown -R elasticsearch /var/lib/elasticsearch/tmp
+
+cp -R ./config/etc /
+cp -R ./config/usr /
