@@ -1,0 +1,19 @@
+{
+  "properties": {
+    "annotation": {
+      "type": "text"
+    },
+    "name": {
+      "type": "keyword"
+    },
+    "author": {
+      "type": "keyword"
+    },
+    "itemid": {
+      "type": "long"
+    },
+    "parent_id": {
+      "type": "long"
+    }
+  }
+}
