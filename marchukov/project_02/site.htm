@@ -1,0 +1,21 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.0/mustache.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.9/require.min.js"></script>
+<script>
+    // Declare the module and path.
+    requirejs.config({
+      paths: {
+        divolte: 'https://35.187.111.78/tracking/divolte'
+      }
+    });
+    // Trigger the initial load.
+    require(['divolte']);
+
+    // To signal an event or use the API.
+    require(['divolte'], function(divolte) {
+	  $('.basket-btn-checkout').on('click', function(){
+	    var sum = parseInt($('.basket-coupon-block-total-price-current').first().text().replace(' ', ''));
+        console.log(sum);
+		divolte.signal('shop', { price: sum });
+      });
+    });
+</script>
