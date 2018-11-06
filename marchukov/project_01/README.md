@@ -1,46 +1,46 @@
-# Импорт данных через Spark
+# РРјРїРѕСЂС‚ РґР°РЅРЅС‹С… С‡РµСЂРµР· Spark
 
-### Шаг 1
+### РЁР°Рі 1
 
-Поместить исходный файл в hdfs по пути `/user/deadman2000/data.json`
+РџРѕРјРµСЃС‚РёС‚СЊ РёСЃС…РѕРґРЅС‹Р№ С„Р°Р№Р» РІ hdfs РїРѕ РїСѓС‚Рё `/user/deadman2000/data.json`
 
 ```
-# Заходим из под пользователя hdfs
+# Р—Р°С…РѕРґРёРј РёР· РїРѕРґ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ hdfs
 sudo su hdfs
 hdfs dfs -mkdir /user/deadman2000
 hadoop fs -put data.json /user/deadman2000/data.json
-# Идем пить чай
+# РРґРµРј РїРёС‚СЊ С‡Р°Р№
 exit
 ```
 
-### Шаг 2
+### РЁР°Рі 2
 
-Заходим в pyspark
+Р—Р°С…РѕРґРёРј РІ pyspark
 
 ```
 ./shell.sh
 ```
 
-Выполняем
+Р’С‹РїРѕР»РЅСЏРµРј
 
 ```
 spark = SparkSession.builder.master('local').appName('Data import').getOrCreate()
 
 df = spark.read.json('data.json')
 
-# Пьем чай
+# РџСЊРµРј С‡Р°Р№
 
 df.write.format("org.elasticsearch.spark.sql") \
   .option("es.resource", "myindex/type") \
   .save()
   
-# Пьем чай 2
+# РџСЊРµРј С‡Р°Р№ 2
 spark.stop()
 ```
 
-### Шаг 3. Тюнинг
+### РЁР°Рі 3. РўСЋРЅРёРЅРі
 
-Проверяем число шард: http://35.187.111.78:9200/myindex/_settings?pretty
+РџСЂРѕРІРµСЂСЏРµРј С‡РёСЃР»Рѕ С€Р°СЂРґ: http://35.187.111.78:9200/myindex/_settings?pretty
 
 ```json
 {
@@ -61,13 +61,13 @@ spark.stop()
 }
 ```
 
-Задаем число реплик
+Р—Р°РґР°РµРј С‡РёСЃР»Рѕ СЂРµРїР»РёРє
 ```
 PUT /myindex/_settings
 { "number_of_replicas": 2 }
 ```
 
-Проверяем производительность
+РџСЂРѕРІРµСЂСЏРµРј РїСЂРѕРёР·РІРѕРґРёС‚РµР»СЊРЅРѕСЃС‚СЊ
 ```
 GET myindex/_search
 {
@@ -77,7 +77,7 @@ GET myindex/_search
     "bool": {
       "must": {
         "multi_match": {
-          "query": "книги для детей 100 способов",
+          "query": "РєРЅРёРіРё РґР»СЏ РґРµС‚РµР№ 100 СЃРїРѕСЃРѕР±РѕРІ",
           "fields": [
             "attr0",
             "attr1"
@@ -89,4 +89,4 @@ GET myindex/_search
 }
 ```
 
-К сожалению среднее время ответа в районе 1.5s, несмотря на 5 шард и 2 реплики
+Рљ СЃРѕР¶Р°Р»РµРЅРёСЋ СЃСЂРµРґРЅРµРµ РІСЂРµРјСЏ РѕС‚РІРµС‚Р° РІ СЂР°Р№РѕРЅРµ 1.5s, РЅРµСЃРјРѕС‚СЂСЏ РЅР° 5 С€Р°СЂРґ Рё 2 СЂРµРїР»РёРєРё
