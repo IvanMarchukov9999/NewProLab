@@ -1,0 +1,11 @@
+version: '2'
+
+services:
+  db:
+    build: psql
+    environment:
+      POSTGRES_DB: metrics
+      POSTGRES_USER: dataeng
+      POSTGRES_PASSWORD: 12345678
+    ports:
+      - 5432:5432
