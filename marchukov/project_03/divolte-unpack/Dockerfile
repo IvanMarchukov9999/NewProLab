@@ -11,4 +11,5 @@ ADD . /etc/divolte-unpack
 
 WORKDIR /etc/divolte-unpack
 	
-ENTRYPOINT python3 unpack.py > clickhouse-client -n --query="INSERT INTO event FORMAT JSONEachRow" --host 10.111.128.254
+#ENTRYPOINT ./run_pipe.sh
+ENTRYPOINT /bin/bash

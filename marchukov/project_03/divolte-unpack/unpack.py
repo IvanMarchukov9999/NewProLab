@@ -27,10 +27,14 @@ def read_listen():
         try:
             decoder = avro.io.BinaryDecoder(io.BytesIO(message.value))
             data = reader.read(decoder)
-            print(json.dumps(data))
+            data = { k: data[k] for k in ('timestamp', 'sessionId', 'location', 'price')}
+            print(json.dumps(data), flush=True)
+            #sys.stdout.write(json.dumps(data) + '\n')
+            sys.stdout.flush()
         except Exception as e:
             print('Parse error: ', e, file=sys.stderr)
             print(message.value, file=sys.stderr)
 
 if __name__ == '__main__':
     read_listen()
+
