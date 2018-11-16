@@ -14,6 +14,8 @@ docker run --rm -it divolte-unpacker
 
 
 
+echo '{"timestamp": 1542388389729, "sessionId": "0:jok8p7l0:YfiZwkZi2Ozr9qov347LRblmEmIKRuv~", "location": "https://b24-tqj4la.bitrix24.shop/", "price":null}' | clickhouse-client -n --query="INSERT INTO event FORMAT JSONEachRow" --host 10.111.128.254
+
 Заходим с помощью дашборда K8s на сервер Clickhouse (заходим в под -> кнопка EXEC справа наверху)
 
 В консоли выполняем:

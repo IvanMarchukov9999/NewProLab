@@ -17,6 +17,9 @@ consumer = KafkaConsumer(TOPIC,
                          bootstrap_servers=['35.187.111.78:6667'],
                          enable_auto_commit=True,
                          auto_offset_reset='earliest')
+                         
+
+producer = KafkaProducer(bootstrap_servers=['35.187.111.78:6667'])
 
 def read_listen():
     for message in consumer:
@@ -27,10 +30,8 @@ def read_listen():
         try:
             decoder = avro.io.BinaryDecoder(io.BytesIO(message.value))
             data = reader.read(decoder)
-            data = { k: data[k] for k in ('timestamp', 'sessionId', 'location', 'price')}
-            print(json.dumps(data), flush=True)
-            #sys.stdout.write(json.dumps(data) + '\n')
-            sys.stdout.flush()
+            #data = { k: data[k] for k in ('timestamp', 'sessionId', 'location', 'price')}
+            producer.send('json_events', data)
         except Exception as e:
             print('Parse error: ', e, file=sys.stderr)
             print(message.value, file=sys.stderr)
