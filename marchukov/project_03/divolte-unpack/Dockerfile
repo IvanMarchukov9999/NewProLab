@@ -11,5 +11,4 @@ ADD . /etc/divolte-unpack
 
 WORKDIR /etc/divolte-unpack
 	
-#ENTRYPOINT ./run_pipe.sh
-ENTRYPOINT /bin/bash
+ENTRYPOINT ./run_pipe.sh

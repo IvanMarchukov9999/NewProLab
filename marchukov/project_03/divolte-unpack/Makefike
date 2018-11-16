@@ -1,7 +1,0 @@
-build:
-	docker build -t divolte-unpacker .
-
-run:
-	docker run --rm -it divolte-unpacker
-
-.PHONY: build run

@@ -9,4 +9,3 @@ shell:
 
 .PHONY:
 	build
-	run
