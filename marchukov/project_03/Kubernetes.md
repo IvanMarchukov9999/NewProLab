@@ -72,8 +72,23 @@ kubectl get nodes
 
 По использованию kubectl: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands
 
+
+### Tips'n'Tricks
+
+Запуск контейнера
+
+kubectl run -it --image=alpine --command sh
+
+Для тех, кто привык к докеру: https://kubernetes.io/docs/reference/kubectl/docker-cli-to-kubectl/
+
 ## Устанавливаем Kubernetes через Ansible
 
 https://github.com/kubernetes-incubator/kubespray
 
 http://linux-notes.org/ustanovka-kubernetes-v-unix-linux/
+
+
+
+
+
+eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlLXN5c3RlbSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJhZG1pbi11c2VyLXRva2VuLWx4cDk4Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImFkbWluLXVzZXIiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiI4MGI2Y2ZmYy1lNWI4LTExZTgtYTY1OS00MjAxMGE4NDAwMDIiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6a3ViZS1zeXN0ZW06YWRtaW4tdXNlciJ9.S5S6lNrSk6coE5PElnxqBKxJGWXwBtndjNggmvplJlNS7zw08BBMIBsndl5eD-1vLErH1VEqt1d8vVTiD_GCDGN78OyTs89KhVfey0yCIX86F3-z35oFZmAQAHMBcnb9WXpHJ55Y3_QaUSZIDjCWLcmbMLZZjxuC8ID3PtqRz_KnM-zzsle23j9XBEAu__C-hGZs2Yk37CSXU3u0nSZvI2bTmhaYWODB6nuUBtthcrE83kJZ_-o5yjO64O8sgRPJW7clRmXErG4NcU9-Ihom-7x-i0lRYYtOU9dghO7tik4-hTzV_4DIQbmBy0rfiuZoGWElkPT7N9-7SfRhRaWJiA

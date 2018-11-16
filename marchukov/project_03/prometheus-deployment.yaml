@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+spec:
+  ports:
+  - port: 9090
+  selector:
+    app: prometheus
+  clusterIP: None
+---
+apiVersion: v1
+data:
+  prometheus.yaml: |
+    global:
+      evaluation_interval: 5s
+      external_labels: {monitor: test-course}
+      scrape_interval: 5s
+    scrape_configs:
+    - job_name: prometheus
+      static_configs:
+      - targets: ['localhost:9090']
+    - honor_labels: true
+      job_name: pushgateway
+      static_configs:
+      - targets: ['pushgateway:9091']
+    - job_name: telemetry
+      static_configs:
+      - labels: {t_host: 195.93.229.67}
+        targets: ['telemetry:5000']
+    - job_name: navigation
+      static_configs:
+      - labels: {n_host: '195.93.229.66:4242'}
+        targets: ['navigation:5000']
+    - job_name: processing
+      static_configs:
+      - labels: {p_job: 0}
+        targets: ['processing:5000']
+      - labels: {p_job: 1}
+        targets: ['processing:5001']
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: prometheus-core
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Service
+metadata:
+  name: prometheus-core
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      containers:
+      - image: prom/prometheus:v2.4.3
+        name: prometheus
+        ports:
+        - containerPort: 9090
+          name: prometheus

@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: clickhouse
+spec:
+  ports:
+  - port: 9000
+    name: native
+  - port: 8123
+    name: http
+  selector:
+    app: clickhouse
+  clusterIP: 10.111.128.254
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: clickhouse
+spec:
+  selector:
+    matchLabels:
+      app: clickhouse
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: clickhouse
+    spec:
+      containers:
+      - image: yandex/clickhouse-server
+        name: clickhouse
+        ports:
+        - containerPort: 9000
+          name: native
+        - containerPort: 8123
+          name: http
+        volumeMounts:
+        - name: clickhouse-persistent-storage
+          mountPath: /var/lib/clickhouse
+      volumes:
+      - name: clickhouse-persistent-storage
+        persistentVolumeClaim:
+          claimName: clickhouse-pv-claim
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: clickhouse-pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: clickhouse-pv-claim
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
