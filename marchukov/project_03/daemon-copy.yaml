@@ -1,0 +1,16 @@
+- hosts: all
+  tasks:
+  - name: copy for insecure-registries
+    become: yes
+    copy:
+      src: /etc/docker/daemon.json
+      dest: /etc/docker/daemon.json
+      owner: root
+      group: root
+      mode: o=rw
+  - name: restart service
+    become: yes
+    systemd:
+      state: restarted
+      daemon_reload: yes
+      name: docker

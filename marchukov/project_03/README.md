@@ -2,32 +2,78 @@
 
 Пример как развернуть MySQL: https://kubernetes.io/docs/tasks/run-application/run-single-instance-stateful-application/
 
-Разворачиваем в Kubernetes clickhouse-deployment.yaml
+### Docker Registry
 
+Для того, чтобы подготавливать образы и разворачивать их в кластере Kubernetes нужен реестр.
 
-echo -ne "1, 'some text', '2016-08-14 00:00:00'\n2, 'some more text', '2016-08-14 00:00:01'" | clickhouse-client --database=test --query="INSERT INTO test FORMAT CSV" --host 10.111.128.254;
+Запускаем в контейнере:
 
+```
+docker run -d -p 5000:5000 --restart always --name registry registry:latest
 
-docker build -t divolte-unpacker .
+# Выполняем из под sudo
+# Создаем конфиг для докера для доступа к реестру без SSL
+echo '{"insecure-registries" : ["instance-1.europe-west1-b.c.agile-splicer-218512.internal:5000"]}' > /etc/docker/daemon.json
 
-docker run --rm -it divolte-unpacker
+# Тиражируем конфиг на ноды
+ansible-playbook daemon-copy.yaml
+```
 
+https://medium.com/@jmarhee/in-cluster-docker-registry-with-tls-on-kubernetes-758eecfe8254
 
+### Clickhouse
 
-echo '{"timestamp": 1542388389729, "sessionId": "0:jok8p7l0:YfiZwkZi2Ozr9qov347LRblmEmIKRuv~", "location": "https://b24-tqj4la.bitrix24.shop/", "price":null}' | clickhouse-client -n --query="INSERT INTO event FORMAT JSONEachRow" --host 10.111.128.254
+Разворачиваем в Kubernetes `clickhouse-deployment.yaml` с помощью Dashboard
 
-Заходим с помощью дашборда K8s на сервер Clickhouse (заходим в под -> кнопка EXEC справа наверху)
+В папке `divolte-unpacker` собираем распаковщик avro:
+
+```
+make
+```
+
+Проверить, что образ залился в Registry можно запросом `http://35.187.111.78:5000/v2/_catalog`
+
+Заходим в шелл clickhouse:
+
+```
+kubectl exec -it clickhouse-d56f44759-lttb4 /bin/bash
+```
 
 В консоли выполняем:
+
 ```
 clickhouse client -m
-
-DROP TABLE event;
 
 CREATE TABLE event (
     timestamp UInt64,
     sessionId String,
     location String,
 	price Nullable(Float32)
-) ENGINE = TinyLog;
+) ENGINE= Kafka('35.187.111.78:6667', 'json_events', 'ch-group', 'JSONEachRow');
+
+
+CREATE TABLE log (
+    timestamp UInt64,
+    sessionId String,
+    location String,
+	price Nullable(Float32)
+) ENGINE = TinyLog();
+
+CREATE MATERIALIZED VIEW consumer TO log
+	AS SELECT * FROM event;
+
+SELECT * FROM log;
 ```
+
+
+### TODO
+
+* Docker Registry
+
+* Pod для unpacker
+
+* Flask для сбора метрик
+
+* Конфигурация Prometheus
+
+* Grafana
