@@ -19,7 +19,7 @@ echo '{"insecure-registries" : ["instance-1.europe-west1-b.c.agile-splicer-21851
 ansible-playbook daemon-copy.yaml
 ```
 
-https://medium.com/@jmarhee/in-cluster-docker-registry-with-tls-on-kubernetes-758eecfe8254
+[Тут](https://medium.com/@jmarhee/in-cluster-docker-registry-with-tls-on-kubernetes-758eecfe8254) инфа, как развернуть Registry в K8s с SSL сертификатами, но на моей практике возня с SSL лишняя, т.к. нужны подписанные сертификаты, а с ними заморочки...
 
 ### Clickhouse
 
@@ -67,10 +67,6 @@ SELECT * FROM log;
 
 
 ### TODO
-
-* Docker Registry
-
-* Pod для unpacker
 
 * Flask для сбора метрик
 
