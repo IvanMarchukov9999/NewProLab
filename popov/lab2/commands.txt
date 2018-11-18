@@ -1,0 +1,18 @@
+ambari-server install-mpack \
+--mpack=/tmp/hdf-ambari-mpack-3.2.0.0-520.tar.gz \
+--verbose
+
+
+## Show list of topics
+/usr/hdp/3.0.0.0-1634/kafka/bin/kafka-topics.sh --list --zookeeper 35.240.76.111:2181
+
+## Connect to topic by kafka-cli consumer
+/usr/hdp/3.0.0.0-1634/kafka/bin/kafka-console-consumer.sh --bootstrap-server 35.240.76.111:6667 --topic clicks
+
+## Connect to topic by kafka-cli producer
+/usr/hdp/3.0.0.0-1634/kafka/bin/kafka-console-producer.sh --broker-list 35.240.76.111:6667 --topic clicks
+
+
+
+sudo docker network create --subnet=172.18.0.0/16 clicknet
+sudo docker run -d --name some-clickhouse-server --ulimit nofile=262144:262144 --net clicknet --ip 172.18.0.1 yandex/clickhouse-server 
