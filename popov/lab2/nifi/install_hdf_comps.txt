@@ -1,0 +1,14 @@
+##Install hdf-ambari-mpack 
+##https://docs.hortonworks.com/HDPDocuments/HDF3/HDF-3.3.0/installing-hdf-and-hdp/content/installing_the_hdf_management_pack.html
+ambari-server install-mpack \
+--mpack=/tmp/hdf-ambari-mpack-3.2.0.0-520.tar.gz \
+--verbose
+ambari-server restart
+
+##Update the HDF Base URL
+##https://docs.hortonworks.com/HDPDocuments/HDF3/HDF-3.3.0/installing-hdf-and-hdp/content/update_the_hdf_base_url.html
+
+##Add HDF Services to an HDP Cluster: NIFI , SCHEMA REGISTRY
+##https://docs.hortonworks.com/HDPDocuments/HDF3/HDF-3.3.0/installing-hdf-and-hdp/content/hdf-add_hdf_services_to_an_hdp_cluster.html
+
+##Add and configure Pstgress for Registry repo

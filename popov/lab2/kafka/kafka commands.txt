@@ -1,0 +1,9 @@
+## Show list of topics
+/usr/hdp/3.0.0.0-1634/kafka/bin/kafka-topics.sh --list --zookeeper 35.240.76.111:2181
+
+## Connect to topic by kafka-cli consumer
+/usr/hdp/3.0.0.0-1634/kafka/bin/kafka-console-consumer.sh --bootstrap-server 35.240.76.111:6667 --topic anton.popov
+
+## Connect to topic by kafka-cli producer
+/usr/hdp/3.0.0.0-1634/kafka/bin/kafka-console-producer.sh --broker-list 35.240.76.111:6667 --topic anton.popov
+

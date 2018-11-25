@@ -1,0 +1,16 @@
+select
+    timestamp
+  , sessionId
+  , item_url
+  from site.event
+where timestamp >= 1543176213140
+order by timestamp;
+
+
+
+1543162118220 - Avro
+1543159218484
+
+1268722858    - CH
+
+4294967295

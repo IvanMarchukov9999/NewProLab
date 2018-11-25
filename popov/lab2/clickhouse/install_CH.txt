@@ -1,0 +1,41 @@
+##Install from docker
+docker pull yandex/clickhouse-server
+
+## Run CH
+sudo docker network create --subnet=172.18.0.0/16 clicknet
+sudo docker run -d --name some-clickhouse-server --ulimit nofile=262144:262144 --net clicknet --ip 172.18.0.11 yandex/clickhouse-server 
+sudo docker restart some-clickhouse-server
+sudo docker run -it --rm --link some-clickhouse-server:clickhouse-server --net clicknet yandex/clickhouse-client clickhouse-client --host clickhouse-server
+
+## Check CH Docker settings
+sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' some-clickhouse-server
+
+## Check CH
+curl 'http://172.18.0.11:8123/'
+
+## Add table to CH
+echo 'CREATE DATABASE IF NOT EXISTS site' | curl 'http://172.18.0.11:8123/'  --data-binary @-
+echo 'DROP TABLE IF EXISTS site.event' | curl 'http://172.18.0.11:8123/'  --data-binary @-
+echo 'CREATE TABLE site.event (
+    detectedDuplicate UInt8,
+    detectedCorruption UInt8,
+    firstInSession UInt8,
+    timestamp UInt64,
+    clientTimestamp UInt64,
+    remoteHost String,
+    referer String,
+    location String,
+    partyId String,
+    sessionId String,
+    pageViewId String,
+    eventType String,
+    basket_price String,
+    item_id String,
+    item_price String,
+    item_url String,
+    date Date DEFAULT today()
+) ENGINE = MergeTree(date, (sessionId,pageViewId,eventType,item_id,timestamp), 8192);' | curl 'http://172.18.0.11:8123/' --data-binary @-
+echo 'select count(*) from site.event' | curl 'http://172.18.0.11:8123/' --data-binary @-
+
+## Run CH native client
+docker run -it --rm --link some-clickhouse-server:clickhouse-server --net clicknet yandex/clickhouse-client --host clickhouse-server
