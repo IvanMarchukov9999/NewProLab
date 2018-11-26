@@ -1,7 +1,18 @@
 select
     timestamp
   , sessionId
+  , item_id
   , item_url
+  from site.event
+where timestamp >= 1543176213140
+order by timestamp;
+
+select
+    timestamp
+  , sessionId
+  , item_id
+  , item_url
+  , extract(item_id,'(?:.*?_){2}(\\d*)') real_item_id
   from site.event
 where timestamp >= 1543176213140
 order by timestamp;

@@ -4,8 +4,10 @@ docker pull yandex/clickhouse-server
 ## Run CH
 sudo docker network create --subnet=172.18.0.0/16 clicknet
 sudo docker run -d --name some-clickhouse-server --ulimit nofile=262144:262144 --net clicknet --ip 172.18.0.11 yandex/clickhouse-server 
+## Rerun
 sudo docker restart some-clickhouse-server
-sudo docker run -it --rm --link some-clickhouse-server:clickhouse-server --net clicknet yandex/clickhouse-client clickhouse-client --host clickhouse-server
+##Stop
+sudo docker restart some-clickhouse-server
 
 ## Check CH Docker settings
 sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' some-clickhouse-server
@@ -38,4 +40,4 @@ echo 'CREATE TABLE site.event (
 echo 'select count(*) from site.event' | curl 'http://172.18.0.11:8123/' --data-binary @-
 
 ## Run CH native client
-docker run -it --rm --link some-clickhouse-server:clickhouse-server --net clicknet yandex/clickhouse-client --host clickhouse-server
+sudo docker run -it --rm --link some-clickhouse-server:clickhouse-server --net clicknet yandex/clickhouse-client clickhouse-client --host clickhouse-server
