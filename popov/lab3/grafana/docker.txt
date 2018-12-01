@@ -1,0 +1,15 @@
+docker pull qxip/clickhouse-grafana
+
+sudo docker run -d -p 3030:3000 --name clickhouse-grafana --net clicknet qxip/clickhouse-grafana
+## Rerun
+sudo docker restart clickhouse-grafana
+##Stop
+sudo docker stop clickhouse-grafana
+
+curl 'http://localhost:3030/'
+
+sudo docker container exec clickhouse-grafana grafana-cli plugins list-remote
+sudo docker container cp ./vertamedia-clickhouse-datasource/ clickhouse-grafana:/var/lib/grafana/plugins/
+sudo docker container exec clickhouse-grafana service grafana-server restart
+sudo docker container restart clickhouse-grafana
+##sudo docker network connect clicknet clickhouse-grafana
