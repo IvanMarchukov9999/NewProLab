@@ -35,7 +35,6 @@ from
             windowFunnel(3600)(CAST(timestamp / 1000, 'UInt32'), eventType = 'pageView', eventType = 'itemViewEvent', eventType = 'itemBuyEvent') AS deep,
             windowFunnel(3600)(CAST(timestamp / 1000, 'UInt32'), eventType = 'pageView', eventType = 'itemBuyEvent') AS deep_bad_buy
         from site.event
-        where timestamp >= 1543176213140
         group by sessionId
     )
 )
@@ -54,7 +53,7 @@ from
         extract(item_id,'(?:.*?_){2}(\\d*)') as real_item_id,
         windowFunnel(3600)(CAST(timestamp / 1000, 'UInt32'), eventType = 'itemViewEvent', eventType = 'itemBuyEvent') AS deep,
         windowFunnel(3600)(CAST(timestamp / 1000, 'UInt32'), eventType = 'itemBuyEvent') AS deep_bad_buy,
-        count(*) cnt
+        count(distinct extract(item_id,'(?:.*?_){2}(\\d*)')) cnt
     from site.event
     where timestamp >= 1543176213140
       and eventType in ('itemViewEvent','itemBuyEvent')
